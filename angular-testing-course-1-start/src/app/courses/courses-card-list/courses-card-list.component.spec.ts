@@ -42,6 +42,8 @@ describe('CoursesCardListComponent', () => {
   it('should display the course list', () => {
 
     sut.courses = setupCourses();
+    fixture.detectChanges();
+
     const cards = el.queryAll(By.css('.course-card'));
     expect(cards).toBeTruthy('Could not find cards');
     expect(cards.length).toBe(12,'Unexpected number fo courses');
@@ -51,7 +53,20 @@ describe('CoursesCardListComponent', () => {
 
   it('should display the first course', () => {
 
-    pending();
+    sut.courses = setupCourses();
+    fixture.detectChanges();
+
+    const course = sut.courses[0];
+    const card = el.query(By.css('.course-card:first-child'));
+    expect(card).toBeTruthy('cound not find course card');
+
+     const title = card.query(By.css('mat-card-title'));
+     expect(title.nativeElement.textContent).toBeTruthy();
+     expect(title.nativeElement.textContent).toBe(course.titles.description);
+
+     const img = card.query(By.css('img'));
+     expect(img).toBeTruthy();
+     expect(img.nativeElement.src).toBe(course.iconUrl,'url of img doesnot match');
 
   });
 
