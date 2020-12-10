@@ -19,7 +19,7 @@ describe('CourseService', () => {
             providers: [
                 CoursesService
             ]
-        })
+        });
 
         sut = TestBed.inject(CoursesService);
         httpTestingController = TestBed.inject(HttpTestingController);
@@ -95,8 +95,9 @@ describe('CourseService', () => {
             expect(lessons.length).toBe(3);
         });
 
-        const req = httpTestingController.expectOne(req =>
-            req.url === '/api/lessons'
+        const req = httpTestingController.expectOne(function (req) {
+                return req.url === '/api/lessons';
+            }
         );
         expect(req.request.method).toEqual('GET');
         expect(req.request.params.get('courseId')).toEqual('12');
