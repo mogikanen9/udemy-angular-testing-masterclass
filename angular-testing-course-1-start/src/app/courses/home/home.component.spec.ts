@@ -13,7 +13,7 @@ import { HomeComponent } from './home.component';
 
 
 
-fdescribe('HomeComponent', () => {
+xdescribe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
   let component: HomeComponent;
