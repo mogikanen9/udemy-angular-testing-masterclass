@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
@@ -10,10 +10,7 @@ import { CoursesService } from '../services/courses.service';
 import { HomeComponent } from './home.component';
 
 
-
-
-
-xdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
   let component: HomeComponent;
@@ -24,7 +21,7 @@ xdescribe('HomeComponent', () => {
   const advancedCourses = setupCourses().filter(course => course.category === 'ADVANCED');
   const allCourses = setupCourses();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']);
 
@@ -46,7 +43,6 @@ xdescribe('HomeComponent', () => {
   }));
 
   it('should create the component', () => {
-
     expect(component).toBeTruthy();
 
   });
@@ -90,7 +86,7 @@ xdescribe('HomeComponent', () => {
   });
 
 
-  it('should display advanced courses when tab clicked', () => {
+  it('should display advanced courses when tab clicked', (done: DoneFn) => {
 
     coursesService.findAllCourses.and.returnValue(of(allCourses));
 
@@ -102,12 +98,17 @@ xdescribe('HomeComponent', () => {
 
     fixture.detectChanges();
 
-    const cardTitles = el.queryAll(By.css('.mat-card-title'));
+     setTimeout(()=>{
+       const cardTitles = el.queryAll(By.css('.mat-card-title'));
 
-    expect(cardTitles.length).toBeGreaterThan(0,'Could not find card title');
+       expect(cardTitles.length).toBeGreaterThan(0,'Could not find card title');
+  
+      //expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security Course');
 
-    expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security Course');
-
+       done();
+  
+     },500);
+    
   });
 
 });
