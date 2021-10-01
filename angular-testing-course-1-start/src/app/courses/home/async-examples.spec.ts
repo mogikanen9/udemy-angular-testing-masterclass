@@ -1,6 +1,8 @@
-import { fakeAsync, flush, tick } from "@angular/core/testing";
+import { fakeAsync, flush, flushMicrotasks, tick } from "@angular/core/testing";
+import { of } from "rxjs";
+import { delay } from "rxjs/operators";
 
-fdescribe('Async Test Examples',()=>{
+describe('Async Test Examples',()=>{
 
     it('async test example with jasmin done()',(done:DoneFn)=>{
 
@@ -33,13 +35,9 @@ fdescribe('Async Test Examples',()=>{
 
     }));
 
-    fit('Async test example - plain Promise', ()=>{
+    it('Async test example - plain Promise', fakeAsync(()=>{
         let flag = false;
         console.log('Creating promise');
-
-        setTimeout(()=>{
-            console.log('set timeout');
-        });
 
         queueMicrotask(()=>{
             console.log('my microtask');
@@ -48,9 +46,51 @@ fdescribe('Async Test Examples',()=>{
         Promise.resolve().then(()=>{
             console.log('Promise evaluated successfully');
             flag = true;
-        })
+            return Promise.resolve(flag);
+        }).then((flag:boolean)=>{
+            console.log(`fulfilled flag->${flag}`);
+        });
+
+        flushMicrotasks();
+
         console.log('Runnig test assertions');
         expect(flag).toBeTruthy();
-    });
+    }));
+
+    it('Async test eample - Promise+setTimeout', fakeAsync(()=>{
+
+        let counter = 0;
+
+        Promise.resolve().then(()=>{
+            counter+=10;
+
+            setTimeout(()=>{
+                counter+=1;
+            },1000)
+        });
+
+        expect(counter).toBe(0);
+        flushMicrotasks();
+        expect(counter).toBe(10);
+        tick(500);
+        expect(counter).toBe(10);
+        tick(500);
+        expect(counter).toBe(11);
+    }));
+
+    it('Async test example - Observable', fakeAsync(()=>{
+
+        let flag = false;
+        console.log('creating observabl');
+
+        const test$ = of(flag).pipe(delay(1000));
+
+        test$.subscribe(()=>{
+            flag = true;
+        });
+
+        tick(1000);
+        expect(flag).toBeTruthy();
+    }));
 
 });

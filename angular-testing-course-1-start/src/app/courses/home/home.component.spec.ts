@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
@@ -86,7 +86,7 @@ describe('HomeComponent', () => {
   });
 
 
-  it('should display advanced courses when tab clicked', (done: DoneFn) => {
+  fit('should display advanced courses when tab clicked', fakeAsync(() => {
 
     coursesService.findAllCourses.and.returnValue(of(allCourses));
 
@@ -98,18 +98,17 @@ describe('HomeComponent', () => {
 
     fixture.detectChanges();
 
-     setTimeout(()=>{
-       const cardTitles = el.queryAll(By.css('.mat-card-title'));
+    flushMicrotasks();
 
-       expect(cardTitles.length).toBeGreaterThan(0,'Could not find card title');
-  
-      //expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security Course');
+    flush(); //make sure all task queue are complete
+     
+    const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
 
-       done();
+    expect(cardTitles.length).toBeGreaterThan(0,'Could not find card title');
   
-     },500);
-    
-  });
+    expect(cardTitles[0].nativeElement.textContent).toContain('Angular Security Course');
+      
+  }));
 
 });
 
