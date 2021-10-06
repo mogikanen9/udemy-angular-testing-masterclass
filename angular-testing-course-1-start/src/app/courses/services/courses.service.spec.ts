@@ -5,7 +5,7 @@ import { COURSES, findLessonsForCourse, LESSONS } from '../../../../server/db-da
 import { Course } from '../model/course';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('CourseService', () => {
+xdescribe('CourseService', () => {
 
     let sut: CoursesService;
     let httpTestingController: HttpTestingController;
